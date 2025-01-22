@@ -10,12 +10,16 @@ public class Seat {
 
     SeatCategory seatCategory;
 
+    public Seat() {
+
+    }
+
     @Override
     public String toString() {
-        return "Seat{" +
-                "seatId=" + seatId +
-                ", price=" + price +
-                ", seatCategory=" + seatCategory +
+        return "Seat {" +
+                "Seat Id=" + seatId +
+                ", Price=" + price +
+                ", Seat Category=" + seatCategory +
                 '}';
     }
 

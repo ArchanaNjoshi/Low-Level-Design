@@ -41,11 +41,9 @@ public class Movie {
 
     @Override
     public String toString() {
-        return "Movie{" +
-                "movieId=" + movieId +
-                ", movieName='" + movieName + '\'' +
-                ", duration=" + duration +
-                '}';
+        return "Movie " + movieId +
+                ". " + movieName +
+                ", Duration=" + String.format("%02d:%02d", duration / 60, duration % 60);
     }
 
 

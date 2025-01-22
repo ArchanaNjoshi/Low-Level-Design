@@ -8,8 +8,16 @@ public class Show {
      Movie movie;
 
      Screen screen;
-
+    String startTime;
      List<Integer> availableSeatIds;
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
 
     public Show(int showId, Movie movie, Screen screen, List<Integer> availableSeatIds) {
         this.showId = showId;
@@ -56,11 +64,9 @@ public class Show {
 
     @Override
     public String toString() {
-        return "Show{" +
-                "showId=" + showId +
-                ", movie=" + movie +
-                ", screen=" + screen +
-                ", bookedSeatIds=" + availableSeatIds +
-                '}';
+        return "Show " + showId +
+                ". Screening " + movie +
+                "on screen " + screen.getScreenId() +
+                ".Seats available: " + availableSeatIds.size();
     }
 }

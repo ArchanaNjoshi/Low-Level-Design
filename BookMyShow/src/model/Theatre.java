@@ -58,8 +58,8 @@ public class Theatre {
         return "Theatre{" +
                 "theatreId=" + theatreId +
                 ", city=" + city +
-                ", screenList=" + screenList +
-                ", showList=" + showList +
+                ", screenList=" + screenList.toString() +
+                ", showList=" + showList.toString() +
                 '}';
     }
 }
