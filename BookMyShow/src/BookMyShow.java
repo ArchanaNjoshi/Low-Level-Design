@@ -4,8 +4,8 @@ import enums.City;
 import enums.SeatCategory;
 import model.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class BookMyShow {
     MovieController movieController;
@@ -15,10 +15,67 @@ public class BookMyShow {
         this.movieController = new MovieController();
     }
     public static void main(String[] args) {
+        BookMyShow bookMyShow = new BookMyShow();
+        bookMyShow.initialize();
+
+        // User 1 wants to book SUZUME in banglore
+        bookMyShow.createBooking(City.BANGALORE, "SUZUME");
+
 
 
     }
 
+    private void initialize() {
+        createMovies();
+        createTheatres();
+    }
+
+    private void createBooking(City city, String movieName) {
+        //1. Get all movies in the given city
+        List<Movie> movies = movieController.getMovieByCity(city);
+
+        //2. Check if the user interested movie is available in the city
+        Movie interestedMovie = null;
+        for(Movie movie: movies) {
+            if(movie.getMovieName().equals(movieName)) {
+                interestedMovie = movie;
+            }
+        }
+        //TODO: Book ticket
+
+        //3. Get all theatre vs shows for the given movie and city
+        Map<Theatre, List<Show>> allShowsForMovie = theatreController.getAllShowsByMovie(city, interestedMovie);
+
+        //4. Select the particular show user is interested in
+        Iterator<Map.Entry<Theatre, List<Show>>> iteratorOfTheatreShow = allShowsForMovie.entrySet().iterator();
+        //For simplicity, getting the first show from list rather than user selecting
+        // TODO: Hardcoded for now
+
+        List<Show> showsForMovie = iteratorOfTheatreShow.next().getValue();
+        Show interestedShow = showsForMovie.getFirst();
+
+        List<Integer> availableSeats = interestedShow.getAvailableSeatIds();
+        List<Integer> userInterestedSeats = Arrays.asList(20);
+
+        Ticket ticket = new Ticket();
+        List<Integer> myBookedSeats = new ArrayList<>();
+
+            if(availableSeats.contains(userInterestedSeats.get(0))) {
+              myBookedSeats.add(userInterestedSeats.get(0));
+              ticket.setBookedSeats(myBookedSeats);
+              ticket.setTicketId(1);
+              ticket.setShowId(interestedShow.getShowId());
+              ticket.setScreenId(interestedShow.getScreen().getScreenId());
+              ticket.setMovieName(interestedShow.getMovie().getMovieName());
+
+              System.out.println("Your ticket is "+ticket.toString());
+
+            } else {
+                System.out.println(" Sorry the selected seat "+ userInterestedSeats.get(0)+" is not available");
+                return ;
+            }
+
+    }
     private void createTheatres() {
         List<Theatre> theatres = new ArrayList<>();
 
@@ -28,8 +85,8 @@ public class BookMyShow {
         pvrTheatre.setScreenList(createScreens(1));
 
         List<Show> shows = new ArrayList<>();
-        shows.add(createShow(1, pvrTheatre.getScreenList().get(2), movieController.getMovieByName("INCEPTION")));
-        shows.add(createShow(2, pvrTheatre.getScreenList().get(2), movieController.getMovieByName("SUZUME")));
+        shows.add(createShow(1, pvrTheatre.getScreenList().get(0), movieController.getMovieByName("INCEPTION")));
+        shows.add(createShow(2, pvrTheatre.getScreenList().get(0), movieController.getMovieByName("SUZUME")));
 
         pvrTheatre.setShowList(shows);
 
@@ -38,8 +95,8 @@ public class BookMyShow {
         inoxTheatre.setCity(City.DELHI);
         inoxTheatre.setScreenList(createScreens(2));
         List<Show> shows2 = new ArrayList<>();
-        shows2.add(createShow(1, inoxTheatre.getScreenList().get(2), movieController.getMovieByName("INCEPTION")));
-        shows2.add(createShow(2, inoxTheatre.getScreenList().get(2), movieController.getMovieByName("SUZUME")));
+        shows2.add(createShow(1, inoxTheatre.getScreenList().get(0), movieController.getMovieByName("INCEPTION")));
+        shows2.add(createShow(2, inoxTheatre.getScreenList().get(0), movieController.getMovieByName("SUZUME")));
 
         inoxTheatre.setShowList(shows2);
 
@@ -52,6 +109,7 @@ public class BookMyShow {
         newShow.setShowId(id);
         newShow.setScreen(screen);
         newShow.setMovie(movie);
+        newShow.setAvailableSeatIds(screen.getSeats().stream().map(Seat::getSeatId).collect(Collectors.toList()));
         return newShow;
     }
     private List<Screen> createScreens(int screenId) {

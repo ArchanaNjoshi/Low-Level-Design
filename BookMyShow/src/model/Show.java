@@ -9,13 +9,13 @@ public class Show {
 
      Screen screen;
 
-     List<Integer> bookedSeatIds;
+     List<Integer> availableSeatIds;
 
-    public Show(int showId, Movie movie, Screen screen, List<Integer> bookedSeatIds) {
+    public Show(int showId, Movie movie, Screen screen, List<Integer> availableSeatIds) {
         this.showId = showId;
         this.movie = movie;
         this.screen = screen;
-        this.bookedSeatIds = bookedSeatIds;
+        this.availableSeatIds = availableSeatIds;
     }
 
     public Show() {
@@ -46,12 +46,12 @@ public class Show {
         this.screen = screen;
     }
 
-    public List<Integer> getBookedSeatIds() {
-        return bookedSeatIds;
+    public List<Integer> getAvailableSeatIds() {
+        return availableSeatIds;
     }
 
-    public void setBookedSeatIds(List<Integer> bookedSeatIds) {
-        this.bookedSeatIds = bookedSeatIds;
+    public void setAvailableSeatIds(List<Integer> availableSeatIds) {
+        this.availableSeatIds = availableSeatIds;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class Show {
                 "showId=" + showId +
                 ", movie=" + movie +
                 ", screen=" + screen +
-                ", bookedSeatIds=" + bookedSeatIds +
+                ", bookedSeatIds=" + availableSeatIds +
                 '}';
     }
 }
