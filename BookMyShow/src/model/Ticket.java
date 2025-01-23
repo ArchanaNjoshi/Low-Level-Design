@@ -1,5 +1,7 @@
 package model;
 
+import enums.SeatCategory;
+
 import java.util.List;
 
 public class Ticket {
@@ -9,6 +11,36 @@ public class Ticket {
     int screenId;
 
     String movieName;
+
+    int ticketPrice;
+
+    SeatCategory seatCategory;
+
+    Boolean payment;
+
+    public int getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void setTicketPrice(int ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+
+    public SeatCategory getSeatCategory() {
+        return seatCategory;
+    }
+
+    public void setSeatCategory(SeatCategory seatCategory) {
+        this.seatCategory = seatCategory;
+    }
+
+    public Boolean getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Boolean payment) {
+        this.payment = payment;
+    }
 
     public int getTicketId() {
         return ticketId;
@@ -52,12 +84,13 @@ public class Ticket {
 
     @Override
     public String toString() {
-        return "Ticket{" +
-                "Ticket Id=" + ticketId +
-                ", My seats=" + bookedSeats +
-                ", Show=" + showId +
-                ", Screen=" + screenId +
-                ", Movie='" + movieName + '\'' +
-                '}';
+        return "\n*****Ticket " + ticketId + "*****" +
+                "\nMovie: " + movieName +
+                "\nShow Id: " + showId +
+                "\nScreen Id: " + screenId +
+                "\nSeat number: " + bookedSeats.toString() +
+                "\nSeat type: " + seatCategory +
+                "\nAmount: " + ((float) ticketPrice) +
+                "\nPayment " +( payment ? "successful :)" : "failed:(" );
     }
 }
