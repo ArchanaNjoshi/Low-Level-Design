@@ -2,6 +2,7 @@ package model;
 
 import enums.SeatCategory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Ticket {
@@ -12,18 +13,16 @@ public class Ticket {
 
     String movieName;
 
-    int ticketPrice;
-
     SeatCategory seatCategory;
 
     Boolean payment;
 
-    public int getTicketPrice() {
-        return ticketPrice;
+    public Ticket() {
+        bookedSeats = new ArrayList<>();
     }
 
-    public void setTicketPrice(int ticketPrice) {
-        this.ticketPrice = ticketPrice;
+    public Double getTicketPrice() {
+        return seatCategory.getPrice();
     }
 
     public SeatCategory getSeatCategory() {
@@ -90,7 +89,7 @@ public class Ticket {
                 "\nScreen Id: " + screenId +
                 "\nSeat number: " + bookedSeats.toString() +
                 "\nSeat type: " + seatCategory +
-                "\nAmount: " + ((float) ticketPrice) +
+                "\nAmount: " + (seatCategory.getPrice()) +
                 "\nPayment " +( payment ? "successful :)" : "failed:(" );
     }
 }

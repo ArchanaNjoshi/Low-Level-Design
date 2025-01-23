@@ -1,15 +1,18 @@
 package model;
 
+import enums.SeatCategory;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Show {
 
     int showId;
      Movie movie;
-
      Screen screen;
     String startTime;
-     List<Integer> availableSeatIds;
+    Map<Integer, SeatCategory> availableSeats = new HashMap<>();
 
     public String getStartTime() {
         return startTime;
@@ -19,15 +22,30 @@ public class Show {
         this.startTime = startTime;
     }
 
-    public Show(int showId, Movie movie, Screen screen, List<Integer> availableSeatIds) {
-        this.showId = showId;
-        this.movie = movie;
-        this.screen = screen;
-        this.availableSeatIds = availableSeatIds;
-    }
-
     public Show() {
 
+    }
+
+    public void addSeats(List<Seat> seats){
+        for(Seat seat: seats) {
+            availableSeats.put(seat.getSeatId(), seat.getSeatCategory());
+        }
+    }
+
+    public boolean isSeatAvailable(int seatId) {
+        return availableSeats.containsKey(seatId);
+    }
+
+    public SeatCategory getSeatCategory(int seatId) {
+        return availableSeats.get(seatId);
+    }
+
+    public SeatCategory bookSeat(int seatId) {
+        if(isSeatAvailable(seatId)) {
+            return availableSeats.remove(seatId);
+
+        }
+        return null;
     }
 
     public int getShowId() {
@@ -54,19 +72,19 @@ public class Show {
         this.screen = screen;
     }
 
-    public List<Integer> getAvailableSeatIds() {
-        return availableSeatIds;
+    public Map<Integer, SeatCategory> getAvailableSeats() {
+        return availableSeats;
     }
 
-    public void setAvailableSeatIds(List<Integer> availableSeatIds) {
-        this.availableSeatIds = availableSeatIds;
+    public void setAvailableSeats(Map<Integer, SeatCategory> availableSeats) {
+        this.availableSeats = availableSeats;
     }
 
     @Override
     public String toString() {
         return "Show " + showId +
-                ". Screening " + movie +
-                "on screen " + screen.getScreenId() +
-                ".Seats available: " + availableSeatIds.size();
+                " Screening " + movie +
+                " on screen " + screen.getScreenId() +
+                "\nSeats available: " + availableSeats.size();
     }
 }
