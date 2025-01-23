@@ -8,14 +8,22 @@ public class Show {
      Movie movie;
 
      Screen screen;
+    String startTime;
+     List<Integer> availableSeatIds;
 
-     List<Integer> bookedSeatIds;
+    public String getStartTime() {
+        return startTime;
+    }
 
-    public Show(int showId, Movie movie, Screen screen, List<Integer> bookedSeatIds) {
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public Show(int showId, Movie movie, Screen screen, List<Integer> availableSeatIds) {
         this.showId = showId;
         this.movie = movie;
         this.screen = screen;
-        this.bookedSeatIds = bookedSeatIds;
+        this.availableSeatIds = availableSeatIds;
     }
 
     public Show() {
@@ -46,21 +54,19 @@ public class Show {
         this.screen = screen;
     }
 
-    public List<Integer> getBookedSeatIds() {
-        return bookedSeatIds;
+    public List<Integer> getAvailableSeatIds() {
+        return availableSeatIds;
     }
 
-    public void setBookedSeatIds(List<Integer> bookedSeatIds) {
-        this.bookedSeatIds = bookedSeatIds;
+    public void setAvailableSeatIds(List<Integer> availableSeatIds) {
+        this.availableSeatIds = availableSeatIds;
     }
 
     @Override
     public String toString() {
-        return "Show{" +
-                "showId=" + showId +
-                ", movie=" + movie +
-                ", screen=" + screen +
-                ", bookedSeatIds=" + bookedSeatIds +
-                '}';
+        return "Show " + showId +
+                ". Screening " + movie +
+                "on screen " + screen.getScreenId() +
+                ".Seats available: " + availableSeatIds.size();
     }
 }

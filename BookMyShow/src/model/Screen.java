@@ -28,11 +28,20 @@ public class Screen {
         this.seats = seats;
     }
 
+    public Seat getSeatById(int seatId) {
+        for(Seat seat: seats) {
+            if(seat.getSeatId()==seatId) {
+                return seat;
+            }
+        }
+        return new Seat();
+    }
+
     @Override
     public String toString() {
-        return "Screen{" +
+        return "Screen {" +
                 "screenId=" + screenId +
-                ", seats=" + seats +
+                ", Seating size =" + seats.size() +
                 '}';
     }
 }
