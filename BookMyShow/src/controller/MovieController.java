@@ -21,7 +21,7 @@ public class MovieController {
         movieList.add(movie);
         List<Movie> movies = cityMovieMap.getOrDefault(city, new ArrayList<>());
         movies.add(movie);
-        cityMovieMap.put(city, movieList);
+        cityMovieMap.put(city, movies);
     }
 
     public Movie getMovieByName(String movieName) {
