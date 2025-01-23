@@ -5,7 +5,6 @@ import enums.SeatCategory;
 import model.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class BookMyShow {
     MovieController movieController;
@@ -20,9 +19,9 @@ public class BookMyShow {
         Scanner sc = new Scanner(System.in);
         BookMyShow bookMyShow = new BookMyShow();
         bookMyShow.initialize();
-        Boolean continueBooking = true;
-        // User 1 wants to book SUZUME in banglore
-//        bookMyShow.createBooking(City.BANGALORE, "SUZUME");
+        boolean continueBooking = true;
+        // User 1 wants to book SUZUME in bangalore
+        //bookMyShow.createBooking(City.BANGALORE, "SUZUME");
 
         while (continueBooking) {
 
@@ -84,14 +83,17 @@ public class BookMyShow {
                             //4. Get seats for interested show
                             System.out.println("For selected show " + interestedShow.getShowId() + " the available seats are: ");
 
-                            if (interestedShow.getAvailableSeatIds().size() > 0) {
+                            if (!interestedShow.getAvailableSeats().isEmpty()) {
 
                                 //display seats for the selected show
                                 int rowSize = 10, count = 0;
-                                System.out.print("| ");
-                                for (int showId : interestedShow.getAvailableSeatIds()) {
+                                System.out.println("P -> " + SeatCategory.PREMIUM +" Price "+SeatCategory.PREMIUM.getPrice());
+                                System.out.println("R -> " + SeatCategory.REGULAR+" Price "+SeatCategory.REGULAR.getPrice());
 
-                                    System.out.print(showId + " | ");
+                                System.out.print("| ");
+                                for (Map.Entry<Integer, SeatCategory> integerSeatCategoryEntry: interestedShow.getAvailableSeats().entrySet()) {
+
+                                    System.out.printf(integerSeatCategoryEntry.getKey()+"(%s) | ",integerSeatCategoryEntry.getValue().toString().charAt(0));
                                     count++;
                                     if (count >= rowSize) {
                                         count = 0;
@@ -103,7 +105,7 @@ public class BookMyShow {
                                 System.out.println("Choose a seat by entering the number: ");
                                 int seatChoice = sc.nextInt();
                                 //5. Book seats if available else throw exception
-                                Ticket bookingTicket = bookMyShow.createBookingForShowAndSeats(interestedShow, Arrays.asList(seatChoice));
+                                Ticket bookingTicket = bookMyShow.createBookingForShowAndSeats(interestedShow, List.of(seatChoice));
                                 if (!bookingTicket.getBookedSeats().isEmpty()) {
                                     //6. print ticket
                                     System.out.println("Your ticket is " + bookingTicket.toString());
@@ -162,39 +164,20 @@ public class BookMyShow {
         return theatreController.getAllShowsByMovie(city, interestedMovie);
     }
 
-    private void getSeatsForShow(Show interestedShow) {
-        //Given the particular show user is interested in return all available seats to choose;
-
-        List<Integer> availableSeats = interestedShow.getAvailableSeatIds();
-
-        if (!availableSeats.isEmpty()) {
-            // Return list of seats for user to choose
-
-        } else {
-            System.out.println("Sorry! No seats are available for the selected show " + interestedShow);
-            return;
-        }
-
-    }
-
     private Ticket createBookingForShowAndSeats(Show interestedShow, List<Integer> userInterestedSeats) {
         //TODO: Book ticket
         //4. Given the particular show user is interested in;
 
-        List<Integer> availableSeats = interestedShow.getAvailableSeatIds();
+        int userInterestedSeatId = userInterestedSeats.get(0);
 
         Ticket ticket = new Ticket();
         List<Integer> myBookedSeats = new ArrayList<>();
-
-        if (availableSeats.contains(userInterestedSeats.get(0))) {
-
-
-            //Remove seat from available seats
-            availableSeats.remove(userInterestedSeats.get(0));
+        //Remove seat from available seats, returns false if seat not available
+        if (interestedShow.isSeatAvailable(userInterestedSeatId)) {
 
             //Get Seat details and add to myBookedSeats
-            myBookedSeats.add(userInterestedSeats.get(0));
-            Seat userSeat = interestedShow.getScreen().getSeatById(userInterestedSeats.get(0));
+            myBookedSeats.add(userInterestedSeatId);
+            SeatCategory bookedSeat = interestedShow.bookSeat(userInterestedSeatId);
 
             ticket.setBookedSeats(myBookedSeats);
             ticket.setTicketId(1);
@@ -202,8 +185,7 @@ public class BookMyShow {
             ticket.setScreenId(interestedShow.getScreen().getScreenId());
             ticket.setMovieName(interestedShow.getMovie().getMovieName());
             ticket.setPayment(true);
-            ticket.setTicketPrice(userSeat.getPrice());
-            ticket.setSeatCategory(userSeat.getSeatCategory());
+            ticket.setSeatCategory(bookedSeat);
             return ticket;
         }
 
@@ -213,55 +195,7 @@ public class BookMyShow {
 
     }
 
-    private void createBooking(City city, String movieName) {
-        //1. Get all movies in the given city
-        List<Movie> movies = movieController.getMovieByCity(city);
-
-        //2. Check if the user interested movie is available in the city
-        Movie interestedMovie = null;
-        for (Movie movie : movies) {
-            if (movie.getMovieName().equals(movieName)) {
-                interestedMovie = movie;
-            }
-        }
-        //TODO: Book ticket
-
-        //3. Get all theatre vs shows for the given movie and city
-        Map<Theatre, List<Show>> allShowsForMovie = theatreController.getAllShowsByMovie(city, interestedMovie);
-
-        //4. Select the particular show user is interested in
-        //For simplicity, getting the first show from list rather than user selecting
-        // TODO: Hardcoded for now
-        Iterator<Map.Entry<Theatre, List<Show>>> iteratorOfTheatreShow = allShowsForMovie.entrySet().iterator();
-
-        List<Show> showsForMovie = iteratorOfTheatreShow.next().getValue();
-        Show interestedShow = showsForMovie.getFirst();
-
-        List<Integer> availableSeats = interestedShow.getAvailableSeatIds();
-        List<Integer> userInterestedSeats = Arrays.asList(20);
-
-        Ticket ticket = new Ticket();
-        List<Integer> myBookedSeats = new ArrayList<>();
-
-        if (availableSeats.contains(userInterestedSeats.get(0))) {
-            myBookedSeats.add(userInterestedSeats.get(0));
-            ticket.setBookedSeats(myBookedSeats);
-            ticket.setTicketId(1);
-            ticket.setShowId(interestedShow.getShowId());
-            ticket.setScreenId(interestedShow.getScreen().getScreenId());
-            ticket.setMovieName(interestedShow.getMovie().getMovieName());
-
-            System.out.println("Your ticket is " + ticket.toString());
-
-        } else {
-            System.out.println(" Sorry the selected seat " + userInterestedSeats.get(0) + " is not available");
-            return;
-        }
-
-    }
-
     private void createTheatres() {
-        List<Theatre> theatres = new ArrayList<>();
 
         Theatre pvrTheatre = new Theatre();
         pvrTheatre.setTheatreId(1);
@@ -293,7 +227,9 @@ public class BookMyShow {
         newShow.setShowId(id);
         newShow.setScreen(screen);
         newShow.setMovie(movie);
-        newShow.setAvailableSeatIds(screen.getSeats().stream().map(Seat::getSeatId).collect(Collectors.toList()));
+        newShow.addSeats(screen.getSeats());
+
+//        newShow.setAvailableSeatIds(screen.getSeats().stream().map(Seat::getSeatId).collect(Collectors.toList()));
         return newShow;
     }
 
@@ -309,11 +245,11 @@ public class BookMyShow {
         List<Seat> seats = new ArrayList<>();
 
         for (int seatId = 1; seatId <= 50; seatId++) {
-            Seat seat = new Seat(seatId, 100, SeatCategory.REGULAR);
+            Seat seat = new Seat(seatId, SeatCategory.REGULAR);
             seats.add(seat);
         }
         for (int seatId = 51; seatId <= 100; seatId++) {
-            Seat seat = new Seat(seatId, 200, SeatCategory.PREMIUM);
+            Seat seat = new Seat(seatId, SeatCategory.PREMIUM);
             seats.add(seat);
         }
         return seats;

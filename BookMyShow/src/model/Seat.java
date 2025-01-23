@@ -6,8 +6,6 @@ public class Seat {
 
     int seatId;
 
-    int price;
-
     SeatCategory seatCategory;
 
     public Seat() {
@@ -16,11 +14,9 @@ public class Seat {
 
     @Override
     public String toString() {
-        return "Seat {" +
-                "Seat Id=" + seatId +
-                ", Price=" + price +
-                ", Seat Category=" + seatCategory +
-                '}';
+        return "Seat " + seatId +
+                "Price: " + seatCategory.getPrice() +
+                ", Seat Category=" + seatCategory;
     }
 
     public int getSeatId() {
@@ -31,13 +27,6 @@ public class Seat {
         this.seatId = seatId;
     }
 
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
 
     public SeatCategory getSeatCategory() {
         return seatCategory;
@@ -47,9 +36,8 @@ public class Seat {
         this.seatCategory = seatCategory;
     }
 
-    public Seat(int seatId, int price, SeatCategory seatCategory) {
+    public Seat(int seatId, SeatCategory seatCategory) {
         this.seatId = seatId;
-        this.price = price;
         this.seatCategory = seatCategory;
     }
 
